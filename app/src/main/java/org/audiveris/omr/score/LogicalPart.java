@@ -563,7 +563,7 @@ public class LogicalPart
         // Default Midi program numbers
         private final Constant.Integer defaultSingleStaffPartProgram = new Constant.Integer(
                 "MidiProgram",
-                54,
+                1,
                 "Default program number for a part with one staff");
 
         private final Constant.Integer defaultDoubleStaffPartProgram = new Constant.Integer(
