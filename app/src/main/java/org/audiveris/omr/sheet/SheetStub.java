@@ -500,6 +500,10 @@ public class SheetStub
                         step.doit(sheet); // Standard processing on an existing sheet
                         done(step); // Full completion
                         StepMonitoring.notifyStep(SheetStub.this, step);
+
+                        if (DebugImages.isEnabled()) {
+                            DebugImages.generate(sheet, step);
+                        }
                     } catch (StepPause sp) {
                         done(step);
                         StepMonitoring.notifyStep(SheetStub.this, step);
@@ -1395,6 +1399,10 @@ public class SheetStub
             }
 
             ok = true;
+
+            if (DebugImages.isEnabled() && (target == OmrStep.PAGE || target == OmrStep.last())) {
+                DebugImages.generateFinal(sheet);
+            }
         } catch (StepPause sp) {
             ok = false;
             logger.info("Processing stopped.");

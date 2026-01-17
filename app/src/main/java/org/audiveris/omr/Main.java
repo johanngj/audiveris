@@ -28,6 +28,7 @@ import org.audiveris.omr.constant.ConstantManager;
 import org.audiveris.omr.constant.ConstantSet;
 import org.audiveris.omr.log.LogUtil;
 import org.audiveris.omr.sheet.BookManager;
+import org.audiveris.omr.sheet.DebugImages;
 import org.audiveris.omr.text.tesseract.Languages;
 import org.audiveris.omr.text.tesseract.TesseractOCR;
 import org.audiveris.omr.ui.MainGui;
@@ -256,6 +257,11 @@ public class Main
             // Check MusicFont is loaded
             MusicFont.checkMusicFont();
 
+            // Enable debug images if requested
+            if (cli.getDebugImagesFolder() != null) {
+                DebugImages.enable(cli.getDebugImagesFolder());
+            }
+
             // Run the required tasks, if any (and remember if at least one task failed)
             boolean failure = runBatchTasks();
 
@@ -304,14 +310,12 @@ public class Main
     private static void processCli (String[] args)
     {
         try {
-            // First get the provided parameters if any
             cli = new CLI(WellKnowns.TOOL_NAME);
             cli.parseParameters(args);
         } catch (CmdLineException ex) {
             logger.warn("Error in command line: {}", ex.getLocalizedMessage(), ex);
             logger.warn("Exiting ...");
 
-            // Stop the JVM, with failure status (1)
             Runtime.getRuntime().exit(1);
         }
     }
