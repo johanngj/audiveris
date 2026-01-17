@@ -1,12 +1,6 @@
 # AUDIVERIS - PROJECT KNOWLEDGE BASE
 
-> **Workspace context:** See `../../AGENTS.md` for cross-project info and `../../shared/SHEET_MUSIC.md` for test files.
-
-## Tracking
-
-- **After completing work**: Append summary to `DEVLOG.md`
-- **When planning**: Update `TODO.md`  
-- **On release**: Update `CHANGELOG.md`
+> **Workspace:** `../../AGENTS.md` | **Tracking:** `../../shared/TRACKING.md` | **Test files:** `../../shared/SHEET_MUSIC.md`
 
 **Generated:** 2026-01-17
 **Commit:** e8e303ee8
