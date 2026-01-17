@@ -1,5 +1,8 @@
 # AUDIVERIS - PROJECT KNOWLEDGE BASE
 
+> For workspace resources (samples, MCP tools), see `../../shared/CHILD.md`
+> For cross-project context, see `../../AGENTS.md`
+
 **Generated:** 2026-01-17
 **Commit:** e8e303ee8
 **Branch:** johann
