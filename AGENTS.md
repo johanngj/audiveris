@@ -1,7 +1,7 @@
 # AUDIVERIS - PROJECT KNOWLEDGE BASE
 
-> For workspace resources (samples, MCP tools), see `../../shared/CHILD.md`
-> For cross-project context, see `../../AGENTS.md`
+> **Samples folder:** See `../../shared/SHEET_MUSIC.md` (30 choral PDFs, test MusicXML)
+> For MCP tools and full workspace context, see `../../shared/CHILD.md` and `../../AGENTS.md`
 
 **Generated:** 2026-01-17
 **Commit:** e8e303ee8
