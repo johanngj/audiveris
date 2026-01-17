@@ -266,6 +266,19 @@ public class CLI
         return params.swap;
     }
 
+    //--------------------//
+    // getDebugImagesFolder //
+    //--------------------//
+    /**
+     * Report the folder for debug images if present on CLI.
+     *
+     * @return the debug images folder, or null
+     */
+    public Path getDebugImagesFolder ()
+    {
+        return params.debugImagesFolder;
+    }
+
     //-----------------//
     // parseParameters //
     //-----------------//
@@ -281,8 +294,6 @@ public class CLI
     {
         logger.info("CLI args: {}", Arrays.toString(args));
 
-        // Bug fix if an arg is made of spaces
-        // And deprecated "-option" must be replaced by "-constant"
         trimmedArgs = new String[args.length];
 
         for (int i = 0; i < args.length; i++) {
@@ -700,6 +711,10 @@ public class CLI
         /** Should symbols annotations be produced?. */
         @Option(name = "-annotate", usage = "(advanced) Annotate book symbols")
         boolean annotate;
+
+        /** Should debug images be generated?. */
+        @Option(name = "-debug-images", usage = "(advanced) Generate debug visualization images at each step", metaVar = "<folder>")
+        Path debugImagesFolder;
 
         /** Optional "--" separator. */
         @Argument
