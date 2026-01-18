@@ -366,13 +366,18 @@ public class LedgersBuilder
         if (prevIndex != 0) {
             final List<LedgerInter> prevLedgers = staff.getLedgers(prevIndex);
 
-            // If no previous ledger for reference, give up
+            // If no previous ledger for reference, extrapolate from staff line
             if ((prevLedgers == null) || prevLedgers.isEmpty()) {
                 if (stick.isVip()) {
-                    logger.info("Ledger candidate {} orphan", stick);
+                    logger.info("Ledger candidate {} orphan, extrapolating from staff", stick);
                 }
 
-                return null;
+                // Extrapolate Y reference from the staff line mathematically
+                // This allows detection of ledgers even when previous ones are missing
+                final LineInfo staffLine = (index < 0) ? staff.getFirstLine() : staff.getLastLine();
+                final double xMid = stick.getCenter2D().getX();
+                final int interline = staff.getSpecificInterline();
+                return staffLine.yAt(xMid) + (Math.abs(prevIndex) * Integer.signum(index) * interline);
             }
 
             // Check abscissa compatibility
