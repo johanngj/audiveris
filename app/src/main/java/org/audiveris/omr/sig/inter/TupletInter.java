@@ -314,6 +314,19 @@ public class TupletInter
     {
         final Rectangle luBox = glyph.getBounds();
         final Scale scale = system.getSheet().getScale();
+        final Point center = glyph.getCenter();
+
+        // Reject if in lyrics zone (below staff)
+        final int interline = scale.getInterline();
+        final Staff staff = system.getClosestStaff(center);
+        if (staff != null) {
+            final int staffBottom = staff.getLastLine().yAt(center.x);
+            if (center.y > staffBottom + interline) {
+                logger.debug("Discarding tuplet in lyrics zone glyph#{}", glyph.getId());
+                return null;
+            }
+        }
+
         luBox.grow(
                 scale.toPixels(constants.maxTupletChordDx),
                 scale.toPixels(constants.maxTupletChordDy));
