@@ -262,8 +262,20 @@ public class DynamicsInter
             logger.info("VIP lookupLink for {}", this);
         }
 
-        // Look for a suitable chord related to this dynamics element
+        // Reject dynamics in the lyrics zone (below staff)
         final Point center = getCenter();
+        final int interline = system.getSheet().getScale().getInterline();
+        final Staff closestStaff = system.getClosestStaff(center);
+        if (closestStaff != null) {
+            final int staffBottom = closestStaff.getLastLine().yAt(center.x);
+            final int lyricsZoneTop = staffBottom + interline;
+            if (center.y > lyricsZoneTop) {
+                logger.debug("Dynamics {} rejected: in lyrics zone below staff", this);
+                return null;
+            }
+        }
+
+        // Look for a suitable chord related to this dynamics element
         final MeasureStack stack = system.getStackAt(center);
 
         if (stack == null) {
