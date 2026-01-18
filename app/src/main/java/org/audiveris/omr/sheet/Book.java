@@ -2473,7 +2473,7 @@ public class Book
         try {
             getLock().lock();
             checkRadixChange(bookPath);
-            logger.debug("Storing book...");
+            logger.info("Storing book to {}", bookPath);
 
             if ((this.bookPath == null) || this.bookPath.toAbsolutePath().equals(
                     bookPath.toAbsolutePath())) {

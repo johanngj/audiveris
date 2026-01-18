@@ -489,13 +489,10 @@ public class BookManager
             return book.getBookPath().getParent();
         }
 
+        // Use CLI output folder if specified, otherwise use system temp directory
         final Path bookFolder = Main.getCli().getOutputFolder() != null //
                 ? Main.getCli().getOutputFolder() //
-                : constants.useInputBookFolder.isSet() //
-                        ? book.getInputPath().getParent() //
-                        : (useSeparateBookFolders().isSet() //
-                                ? getBaseFolder().resolve(book.getRadix()) //
-                                : getBaseFolder());
+                : Paths.get(System.getProperty("java.io.tmpdir"), "audiveris");
 
         try {
             if (!Files.exists(bookFolder)) {
@@ -515,6 +512,8 @@ public class BookManager
     //-----------------------------//
     /**
      * Report the file path (without extension) to which the book should be written.
+     * <p>
+     * MusicXML exports go to the same folder as the input file.
      *
      * @param book the book to export
      * @return the default book path (without extension) for export
@@ -525,7 +524,8 @@ public class BookManager
             return book.getExportPathSansExt();
         }
 
-        return getDefaultBookFolder(book).resolve(book.getRadix());
+        // Export MusicXML to the same folder as the input file
+        return book.getInputPath().getParent().resolve(book.getRadix());
     }
 
     //-----------------------//
@@ -708,7 +708,7 @@ public class BookManager
                 "Should we use Opus notion for export (rather than separate files)?");
 
         private final Constant.Boolean useCompression = new Constant.Boolean(
-                true,
+                false,
                 "Should we compress the MusicXML output?");
 
         private final Constant.Boolean useSeparateBookFolders = new Constant.Boolean(

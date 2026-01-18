@@ -168,7 +168,7 @@ public abstract class Language
             extends ConstantSet
     {
         private final Constant.String defaultSpecification = new Constant.String(
-                "eng",
+                "eng+isl",
                 "OCR language(s)");
     }
 

@@ -902,6 +902,9 @@ public class SheetStub
      */
     public ProcessingSwitches getProcessingSwitches ()
     {
+        if (parameters == null) {
+            initParameters();
+        }
         return parameters.switches;
     }
 

@@ -53,7 +53,7 @@ public abstract class OMR
     public static final String PRINT_EXTENSION = "-print.pdf";
 
     /** The extension used for score output files: {@value}. */
-    public static final String SCORE_EXTENSION = ".xml";
+    public static final String SCORE_EXTENSION = ".musicxml";
 
     /** The suffix used for a single sheet output in a multi-sheet book: {@value}. */
     public static final String SHEET_SUFFIX = "#";
