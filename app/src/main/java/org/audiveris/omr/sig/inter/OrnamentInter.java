@@ -264,6 +264,35 @@ public class OrnamentInter
             logger.info("VIP OrnamentInter create {} as {}", glyph, shape);
         }
 
+        final Rectangle glyphBounds = glyph.getBounds();
+        final Point glyphCenter = glyph.getCenter();
+        final int interline = system.getSheet().getScale().getInterline();
+
+        final Staff staff = system.getClosestStaff(glyphCenter);
+        if (staff != null) {
+            final int staffBottom = staff.getLastLine().yAt(glyphCenter.x);
+            final int lyricsZoneTop = staffBottom + interline;
+            if (glyphCenter.y > lyricsZoneTop) {
+                logger.debug("Ornament {} rejected: in lyrics zone below staff", glyph);
+                return null;
+            }
+        }
+
+        final int textMargin = interline / 2;
+        final Rectangle expandedBounds = new Rectangle(
+                glyphBounds.x - textMargin,
+                glyphBounds.y - textMargin,
+                glyphBounds.width + 2 * textMargin,
+                glyphBounds.height + 2 * textMargin);
+        final List<Inter> words = system.getSig().inters(WordInter.class);
+
+        for (Inter word : words) {
+            if (word.getBounds().intersects(expandedBounds)) {
+                logger.debug("Ornament {} rejected: near text '{}'", glyph, word);
+                return null;
+            }
+        }
+
         OrnamentInter orn = new OrnamentInter(glyph, shape, grade);
         Link link = orn.lookupLink(systemHeadChords, system.getProfile());
 
