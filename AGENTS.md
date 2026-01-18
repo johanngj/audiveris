@@ -155,3 +155,41 @@ Disabling OCR (`useOCR=false`) has been observed to **improve note detection**:
 - **Tesseract native libs**: Loaded via Javacpp, requires `--enable-native-access=ALL-UNNAMED`
 - **Cross-platform**: Builds for Windows (.msi), Linux (.deb), macOS (.dmg)
 - **Offline mode**: Flatpak uses `dependencies/` folder for air-gapped builds
+
+## KNOWN ISSUES: LYRICS ZONE FALSE DETECTION
+
+Lyrics (especially i-dots and j-dots from words like "rið", "leið", "mín-a") can be misclassified as musical symbols when they appear between voice staves.
+
+### Fixed
+
+| Inter Class | False Detection | Fix Location |
+|-------------|-----------------|--------------|
+| `ArticulationInter` | i-dots → staccato | `createValidAdded()` - lyrics zone + text proximity check |
+| `OrnamentInter` | i-dots → trill | `createValidAdded()` - lyrics zone + text proximity check |
+| `DynamicsInter` | syllables → p, f, mp, mf | `lookupLink()` - lyrics zone check |
+
+### Potentially Affected (not yet observed)
+
+| Inter Class | Potential False Detection | Has `createValidAdded`/`lookupLink` |
+|-------------|---------------------------|-------------------------------------|
+| `FermataInter` | dots → fermata | Yes |
+| `FingeringInter` | numbers → fingering | Yes |
+| `BowInter` | dots → bowing marks | Yes |
+| `PluckingInter` | symbols → plucking | Yes |
+| `PlayingInter` | symbols → playing technique | Yes |
+
+### Fix Pattern
+
+Reject symbols in the "lyrics zone" (center Y > staff bottom + 1 interline):
+
+```java
+final Point center = getCenter();
+final int interline = system.getSheet().getScale().getInterline();
+final Staff staff = system.getClosestStaff(center);
+if (staff != null) {
+    final int staffBottom = staff.getLastLine().yAt(center.x);
+    if (center.y > staffBottom + interline) {
+        return null;  // In lyrics zone
+    }
+}
+```
