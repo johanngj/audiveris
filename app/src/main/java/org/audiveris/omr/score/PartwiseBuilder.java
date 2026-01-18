@@ -319,6 +319,12 @@ public class PartwiseBuilder
     /** Map of Tuplet numbers, reset for every Measure. */
     private final Map<TupletInter, Integer> tupletNumbers = new HashMap<>();
 
+    /** Set of already-exported dynamics, reset for every Measure. */
+    private final Set<Integer> exportedDynamics = new java.util.HashSet<>();
+
+    /** Set of already-exported wedges (by side), reset for every Measure. */
+    private final Set<String> exportedWedges = new java.util.HashSet<>();
+
     /** Factory for ProxyMusic entities. */
     private final ObjectFactory factory = new ObjectFactory();
 
@@ -1625,6 +1631,15 @@ public class PartwiseBuilder
                 return;
             }
 
+            // Skip if a dynamics at approximately same X position was already exported (dedup across staves)
+            final Point location = dynamics.getCenterLeft();
+            final int xTolerance = 10;
+            boolean isDuplicate = exportedDynamics.stream().anyMatch(x -> Math.abs(x - location.x) <= xTolerance);
+            if (isDuplicate) {
+                return;
+            }
+            exportedDynamics.add(location.x);
+
             Direction direction = factory.createDirection();
             DirectionType directionType = factory.createDirectionType();
             Dynamics pmDynamics = factory.createDynamics();
@@ -1637,8 +1652,6 @@ public class PartwiseBuilder
             insertStaffId(direction, staff);
 
             // Placement
-            final Point location = dynamics.getCenterLeft();
-
             if (location.y < current.note.getCenter().y) {
                 direction.setPlacement(AboveBelow.ABOVE);
             } else {
@@ -3105,6 +3118,8 @@ public class PartwiseBuilder
         isFirst.system = true;
         isFirst.measure = true;
         isFirst.part = true;
+        exportedDynamics.clear();
+        exportedWedges.clear();
 
         for (Entry<LogicalPart, ScorePartwise.Part> entry : partMap.entrySet()) {
             processLogicalPart(entry.getKey(), entry.getValue());
@@ -3279,6 +3294,13 @@ public class PartwiseBuilder
     {
         try {
             logger.debug("Visiting {}", wedge);
+
+            // Skip if already exported (same wedge linked to multiple chords)
+            String wedgeKey = wedge.getId() + "-" + side;
+            if (exportedWedges.contains(wedgeKey)) {
+                return;
+            }
+            exportedWedges.add(wedgeKey);
 
             Direction direction = factory.createDirection();
             DirectionType directionType = factory.createDirectionType();
