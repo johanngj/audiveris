@@ -3068,8 +3068,8 @@ public class Book
                 "Should we print out the stop watch?");
 
         private final Constant.Boolean processAllStubsInParallel = new Constant.Boolean(
-                false,
-                "Should we process all stubs of a book in parallel? (beware of many stubs)");
+                true,
+                "Should we process all stubs of a book in parallel?");
 
         private final Constant.Boolean checkBookVersion = new Constant.Boolean(
                 true,
